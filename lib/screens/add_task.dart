@@ -2,34 +2,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-class NewScreem extends StatelessWidget {
-  final String task;
-  final String name;
-  final String description;
-  final bool completed;
-  NewScreem({this.task, this.name, this.description, this.completed});
-
+class AddTask extends StatelessWidget {
   var textcontrol = '';
   var descriptionControl = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit'),
+        title: Text('New Task'),
       ),
       body: Container(
         height: 700,
         padding: EdgeInsets.all(10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           TextFormField(
-            initialValue: name,
             onChanged: (value) {
               textcontrol = value;
             },
             decoration: InputDecoration(labelText: 'Task Name'),
           ),
           TextFormField(
-            initialValue: description,
             onChanged: (value) {
               descriptionControl = value;
             },
@@ -42,15 +34,20 @@ class NewScreem extends StatelessWidget {
             height: 10,
           ),
           RaisedButton(
-            child: Text('done'),
+            child: Text(
+              'done',
+              style: TextStyle(color: Colors.white),
+            ),
+            color: Colors.blue,
             onPressed: () {
               if (textcontrol.isEmpty) {
                 return;
               }
-              FirebaseFirestore.instance.collection('tasks').doc(task).update(
+              FirebaseFirestore.instance.collection('tasks').add(
                 {
                   'name': textcontrol,
                   'description': descriptionControl,
+                  'completed': false,
                 },
               );
               Navigator.pop(context);
@@ -58,20 +55,6 @@ class NewScreem extends StatelessWidget {
           ),
         ]),
       ),
-    );
-  }
-}
-
-class edit extends StatefulWidget {
-  @override
-  State<edit> createState() => _editState();
-}
-
-class _editState extends State<edit> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [TextField()],
     );
   }
 }
