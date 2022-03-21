@@ -6,6 +6,7 @@ import 'package:todo_app/screens/add_task.dart';
 import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/navbar.dart';
 import 'package:todo_app/screens/edit.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,17 +35,19 @@ class _HomeState extends State<Home> {
 
   var selected = false;
   Widget _buildList(QuerySnapshot snapshot) {
+    DateTime Date;
     return Container(
       child: ListView.builder(
         itemCount: snapshot.docs.length,
         itemBuilder: (context, index) {
           final doc = snapshot.docs[index];
+
           return Card(
             color: Colors.black54,
             elevation: 5,
             child: Container(
               padding: EdgeInsets.zero,
-              height: detailedView ? 150 : 70,
+              height: detailedView ? 170 : 70,
               color: Colors.blue,
               child: Slidable(
                 actionExtentRatio: 0.3,
@@ -52,13 +55,28 @@ class _HomeState extends State<Home> {
                 child: ListTile(
                   title: Container(
                     margin: EdgeInsets.all(8),
-                    child: Text(
-                      doc['name'],
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.start,
+                    height: 40,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Title: ${doc['name']}',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start,
+                        ),
+                        Text(
+                          'Due Date: ${DateTime.parse(doc['DOC'].toDate().toString())}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
                     ),
                   ),
                   subtitle: detailedView
@@ -114,7 +132,7 @@ class _HomeState extends State<Home> {
                       print('completed');
                     },
                     child: Container(
-                      height: detailedView ? 150 : 70,
+                      height: detailedView ? 170 : 70,
                       color: Colors.green,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -135,11 +153,12 @@ class _HomeState extends State<Home> {
                             task: doc.id.toString(),
                             name: doc['name'],
                             description: doc['description'],
-                            completed: doc['completed']);
+                            completed: doc['completed'],
+                            doc: doc['DOC']);
                       }));
                     },
                     child: Container(
-                      height: detailedView ? 150 : 70,
+                      height: detailedView ? 170 : 70,
                       color: Colors.grey,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -201,7 +220,7 @@ class _HomeState extends State<Home> {
                           });
                     },
                     child: Container(
-                      height: detailedView ? 150 : 70,
+                      height: detailedView ? 170 : 70,
                       color: Colors.red,
                       child: Icon(
                         Icons.delete,
