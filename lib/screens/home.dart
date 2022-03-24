@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/screens/add_task.dart';
@@ -16,6 +17,26 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // create task function
+
+  // ask before exiting the app
+  int backPressCounter = 1;
+  int backPressTotal = 2;
+  Future<bool> onWillPop() {
+    if (backPressCounter < 2) {
+      final newSnackBar = SnackBar(
+        content: const Text('press again to exit'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(newSnackBar);
+      backPressCounter++;
+      Future.delayed(Duration(seconds: 1, milliseconds: 500), () {
+        backPressCounter--;
+      });
+      return Future.value(false);
+    } else {
+      SystemNavigator.pop();
+      return Future.value(true);
+    }
+  }
 
   var counter = '';
   var tasks = FirebaseFirestore.instance.collection('tasks').snapshots().length;
@@ -41,7 +62,7 @@ class _HomeState extends State<Home> {
                 child: ListTile(
                   title: Container(
                     margin: EdgeInsets.all(8),
-                    height: 40,
+                    height: 50,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,20 +83,20 @@ class _HomeState extends State<Home> {
                           ),
                           textAlign: TextAlign.start,
                         ),
-                        // Text(
-                        //   '${doc['time'].format()}',
-                        //   style: TextStyle(
-                        //     color: Colors.white,
-                        //     fontSize: 12,
-                        //   ),
-                        //   textAlign: TextAlign.start,
-                        // ),
+                        Text(
+                          doc['time'],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
                       ],
                     ),
                   ),
                   subtitle: detailedView
                       ? Container(
-                          height: 100,
+                          height: 90,
                           padding: EdgeInsets.all(10),
                           margin: EdgeInsets.only(bottom: 15, left: 0),
                           color: Colors.white,
@@ -123,7 +144,6 @@ class _HomeState extends State<Home> {
                         ),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      print('completed');
                     },
                     child: Container(
                       height: detailedView ? 170 : 70,
@@ -175,6 +195,12 @@ class _HomeState extends State<Home> {
                               content: Text('Delete \" ${doc['name']} \"?'),
                               actions: [
                                 FlatButton(
+                                  child: Text('No'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                FlatButton(
                                   child: Text('Yes'),
                                   color: Colors.red,
                                   onPressed: () {
@@ -197,6 +223,7 @@ class _HomeState extends State<Home> {
                                             'completed': false,
                                             'DOC': doc['DOC'],
                                             'created': doc['created'],
+                                            'time': doc['time'],
                                           });
                                         },
                                       ),
@@ -205,12 +232,6 @@ class _HomeState extends State<Home> {
                                         .showSnackBar(snackBar);
                                   },
                                 ),
-                                FlatButton(
-                                  child: Text('No'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                )
                               ],
                             );
                           });
@@ -259,82 +280,86 @@ class _HomeState extends State<Home> {
 
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      bottomNavigationBar: BottomNavBar(),
-      appBar: PreferredSize(
-        child: AppBarCustom('Todo'),
-        preferredSize: Size(double.infinity, 50),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 40,
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        bottomNavigationBar: BottomNavBar(),
+        appBar: PreferredSize(
+          child: AppBarCustom('Todo'),
+          preferredSize: Size(double.infinity, 50),
         ),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return AddTask();
-          }));
-        },
-        elevation: 5,
-      ),
-      body: Container(
-        height: deviceHeight * 0.92,
-        decoration: BoxDecoration(
-            color: Colors.brown[50],
-            image:
-                DecorationImage(image: AssetImage('Assets/images/Logo.png'))),
-        padding: EdgeInsets.symmetric(
-          // horizontal: MediaQuery.of(context).size.width * 0.05,
-          vertical: deviceHeight * 0.02,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 40,
+          ),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return AddTask();
+            }));
+          },
+          elevation: 5,
         ),
-        child: LayoutBuilder(builder: (context, constraints) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Ongoing Tasks'),
-                  ),
-                  if (FirebaseFirestore.instance.collection('tasks') != null)
-                    GestureDetector(
-                      onTap: () {
-                        detailedView = !detailedView;
-                        setState(() {
-                          detailedView;
-                        });
-                      },
-                      child: Text(
-                        detailedView
-                            ? 'show less details'
-                            : 'show more details',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                    )
-                ],
-              ),
-              StreamBuilder<QuerySnapshot>(
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData)
-                    return Container(
-                      height: constraints.maxHeight * 0.7,
-                      child: Center(
-                        child: Text('press the + icon to add a task'),
-                      ),
-                    );
-                  return Expanded(child: _buildList(snapshot.data));
-                },
-                stream: FirebaseFirestore.instance
-                    .collection("tasks")
-                    .where('completed', isEqualTo: false)
-                    .snapshots(),
-              ),
-            ],
-          );
-        }),
+        body: Container(
+          height: deviceHeight * 0.92,
+          decoration: BoxDecoration(
+              color: Colors.brown[50],
+              image:
+                  DecorationImage(image: AssetImage('Assets/images/Logo.png'))),
+          padding: EdgeInsets.symmetric(
+            // horizontal: MediaQuery.of(context).size.width * 0.05,
+            vertical: deviceHeight * 0.02,
+          ),
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Ongoing Tasks'),
+                    ),
+                    if (FirebaseFirestore.instance.collection('tasks') != null)
+                      GestureDetector(
+                        onTap: () {
+                          detailedView = !detailedView;
+                          setState(() {
+                            detailedView;
+                          });
+                        },
+                        child: Text(
+                          detailedView
+                              ? 'show less details'
+                              : 'show more details',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                      )
+                  ],
+                ),
+                StreamBuilder<QuerySnapshot>(
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return Container(
+                        height: constraints.maxHeight * 0.7,
+                        child: Center(
+                          child: Text('press the + icon to add a task'),
+                        ),
+                      );
+                    return Expanded(child: _buildList(snapshot.data));
+                  },
+                  stream: FirebaseFirestore.instance
+                      .collection("tasks")
+                      .where('completed', isEqualTo: false)
+                      .snapshots(),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

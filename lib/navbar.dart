@@ -31,10 +31,9 @@ class BottomNavBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: IconButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(context,
-                      MaterialPageRoute(builder: (builder) {
+                  Navigator.push(context, MaterialPageRoute(builder: (builder) {
                     return Completed();
-                  }), (Route<dynamic> route) => false);
+                  }));
                 },
                 iconSize: 30,
                 icon: Icon(Icons.check_box)),

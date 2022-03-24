@@ -23,18 +23,18 @@ class _AddTaskState extends State<AddTask> {
       firstDate: DateTime.now(),
       lastDate: DateTime(lastDate.year + 1),
     );
-    // var Time = await showTimePicker(
-    //   context: context,
-    //   // initialTime: TimeOfDay.now(),
-    // );
+    var Time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
     if (Date == null) return;
-    // if (Time == null) Time = newTime;
+    if (Time == null) return;
     newDate = Date;
-    // newTime = Time;
+    newTime = Time;
     setState(() {
       newDate;
       initialDate = Date;
-      // Time;
+      newTime;
     });
   }
 
@@ -109,7 +109,7 @@ class _AddTaskState extends State<AddTask> {
                     'completed': false,
                     'DOC': newDate,
                     'created': DateTime.now(),
-                    // 'time': newTime,
+                    'time': newTime.format(context).toString(),
                   },
                 );
                 Navigator.pop(context);
