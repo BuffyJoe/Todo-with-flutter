@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/screens/home.dart';
 
 class AppBarCustom extends StatelessWidget {
   final String title;
   AppBarCustom(this.title);
+
+  followDeveloper() async {
+    await FlutterWebBrowser.openWebPage(
+      url: "https://linkedin.com/in/okafor-onyekachukwu-133989209/",
+      customTabsOptions: const CustomTabsOptions(
+        colorScheme: CustomTabsColorScheme.dark,
+        toolbarColor: Colors.blue,
+        secondaryToolbarColor: Colors.green,
+        navigationBarColor: Colors.transparent,
+        shareState: CustomTabsShareState.on,
+        instantAppsEnabled: true,
+        showTitle: true,
+        urlBarHidingEnabled: true,
+      ),
+      safariVCOptions: const SafariViewControllerOptions(
+        barCollapsingEnabled: true,
+        preferredBarTintColor: Colors.green,
+        preferredControlTintColor: Colors.amber,
+        dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
+        modalPresentationCapturesStatusBarAppearance: true,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     void onSelected(int value) {
@@ -20,6 +46,9 @@ class AppBarCustom extends StatelessWidget {
               MaterialPageRoute(builder: (builder) {
             return Completed();
           }), (Route<dynamic> route) => false);
+          break;
+        case 3:
+          followDeveloper();
           break;
       }
     }
@@ -97,7 +126,7 @@ class AppBarCustom extends StatelessWidget {
                       Text('Contact Developer')
                     ],
                   ),
-                  value: 0,
+                  value: 3,
                 ),
               ];
             },

@@ -55,87 +55,88 @@ class _EditState extends State<Edit> {
     firstDate = widget.doc.toDate();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit'),
+        title: Text(widget.name),
       ),
-      body: Container(
-        height: 700,
-        padding: EdgeInsets.all(10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          TextFormField(
-            initialValue: widget.name,
-            onChanged: (value) {
-              textcontrol = value;
-            },
-            decoration: InputDecoration(labelText: 'Task Name'),
-          ),
-          TextFormField(
-            initialValue: widget.description,
-            onChanged: (value) {
-              descriptionControl = value;
-            },
-            minLines: 3,
-            maxLines: 5,
-            decoration:
-                InputDecoration(labelText: 'Task Description (optional)'),
-          ),
-          Container(
-            height: 10,
-          ),
-          Row(
-            children: [
-              FlatButton(
-                child: Text(
-                  'Date Picker',
-                  style: TextStyle(color: Colors.blue),
-                ),
-                onPressed: () {
-                  pickDate(context);
-                },
-                // color: Colors.brown[400],
-              ),
-              Container(
-                child: newDateBool
-                    ? Text(
-                        "${newDate.year}/${newDate.month}/${newDate.day}",
-                      )
-                    : Text(
-                        "${firstDate.year}/${firstDate.month}/${firstDate.day}",
-                      ),
-                padding: EdgeInsets.all(5),
-              )
-            ],
-          ),
-          RaisedButton(
-            child: Text(
-              'done',
-              style: TextStyle(color: Colors.white),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            TextFormField(
+              initialValue: widget.name,
+              onChanged: (value) {
+                textcontrol = value;
+              },
+              decoration: InputDecoration(labelText: 'Task Name'),
             ),
-            color: Colors.blue,
-            onPressed: () {
-              if (newDate == null) {
-                newDate = widget.doc.toDate();
-              }
+            TextFormField(
+              initialValue: widget.description,
+              onChanged: (value) {
+                descriptionControl = value;
+              },
+              minLines: 3,
+              maxLines: 5,
+              decoration:
+                  InputDecoration(labelText: 'Task Description (optional)'),
+            ),
+            Container(
+              height: 10,
+            ),
+            Row(
+              children: [
+                FlatButton(
+                  child: Text(
+                    'Date Picker',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onPressed: () {
+                    pickDate(context);
+                  },
+                  // color: Colors.brown[400],
+                ),
+                Container(
+                  child: newDateBool
+                      ? Text(
+                          "${newDate.year}/${newDate.month}/${newDate.day}",
+                        )
+                      : Text(
+                          "${firstDate.year}/${firstDate.month}/${firstDate.day}",
+                        ),
+                  padding: EdgeInsets.all(5),
+                )
+              ],
+            ),
+            RaisedButton(
+              child: Text(
+                'done',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: Colors.blue,
+              onPressed: () {
+                if (newDate == null) {
+                  newDate = widget.doc.toDate();
+                }
 
-              if (textcontrol.isEmpty) {
-                textcontrol = widget.name;
-              }
-              if (descriptionControl.isEmpty) {
-                descriptionControl = widget.description;
-              }
-              FirebaseFirestore.instance
-                  .collection('tasks')
-                  .doc(widget.task)
-                  .update(
-                {
-                  'name': textcontrol,
-                  'description': descriptionControl,
-                  'DOC': newDate,
-                },
-              );
-              Navigator.pop(context);
-            },
-          ),
-        ]),
+                if (textcontrol.isEmpty) {
+                  textcontrol = widget.name;
+                }
+                if (descriptionControl.isEmpty) {
+                  descriptionControl = widget.description;
+                }
+                FirebaseFirestore.instance
+                    .collection('tasks')
+                    .doc(widget.task)
+                    .update(
+                  {
+                    'name': textcontrol,
+                    'description': descriptionControl,
+                    'DOC': newDate,
+                  },
+                );
+                Navigator.pop(context);
+              },
+            ),
+          ]),
+        ),
       ),
     );
   }

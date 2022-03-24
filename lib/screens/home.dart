@@ -22,20 +22,31 @@ class _HomeState extends State<Home> {
   int backPressCounter = 1;
   int backPressTotal = 2;
   Future<bool> onWillPop() {
-    if (backPressCounter < 2) {
-      final newSnackBar = SnackBar(
-        content: const Text('press again to exit'),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(newSnackBar);
-      backPressCounter++;
-      Future.delayed(Duration(seconds: 1, milliseconds: 500), () {
-        backPressCounter--;
-      });
-      return Future.value(false);
-    } else {
-      SystemNavigator.pop();
-      return Future.value(true);
-    }
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            backgroundColor: Colors.brown[50],
+            content: Text('Exit App?'),
+            actions: [
+              FlatButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.pop(context);
+
+                  return Future.value(false);
+                },
+              ),
+              FlatButton(
+                  child: Text('Yes'),
+                  color: Colors.red,
+                  onPressed: () {
+                    SystemNavigator.pop();
+                    return Future.value(true);
+                  }),
+            ],
+          );
+        });
   }
 
   var counter = '';
