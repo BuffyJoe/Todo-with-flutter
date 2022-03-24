@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/screens/add_task.dart';
 import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/screens/home.dart';
-import 'package:todo_app/main.dart';
 
 class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 65,
+      height: 50,
       child: BottomNavigationBar(
         backgroundColor: Colors.blue[400],
         selectedItemColor: Colors.white,
@@ -18,17 +17,6 @@ class BottomNavBar extends StatelessWidget {
         selectedFontSize: 0.0,
         showUnselectedLabels: false,
         items: [
-          BottomNavigationBarItem(
-            icon: IconButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (builder) {
-                    return Home();
-                  }));
-                },
-                iconSize: 30,
-                icon: Icon(Icons.home)),
-            title: Text('Home'),
-          ),
           BottomNavigationBarItem(
             icon: IconButton(
                 onPressed: () {
@@ -43,9 +31,10 @@ class BottomNavBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: IconButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (builder) {
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (builder) {
                     return Completed();
-                  }));
+                  }), (Route<dynamic> route) => false);
                 },
                 iconSize: 30,
                 icon: Icon(Icons.check_box)),

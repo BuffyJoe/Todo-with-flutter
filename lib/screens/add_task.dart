@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/intl.dart';
 
 class AddTask extends StatefulWidget {
   @override
@@ -15,19 +15,26 @@ class _AddTaskState extends State<AddTask> {
 
   var lastDate = DateTime.now();
   DateTime newDate = DateTime.now();
+  TimeOfDay newTime = TimeOfDay.now();
   Future pickDate(BuildContext context) async {
     final Date = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime(lastDate.year + 2),
+      lastDate: DateTime(lastDate.year + 1),
     );
-
+    // var Time = await showTimePicker(
+    //   context: context,
+    //   // initialTime: TimeOfDay.now(),
+    // );
     if (Date == null) return;
+    // if (Time == null) Time = newTime;
     newDate = Date;
+    // newTime = Time;
     setState(() {
       newDate;
       initialDate = Date;
+      // Time;
     });
   }
 
@@ -74,8 +81,13 @@ class _AddTaskState extends State<AddTask> {
                   // color: Colors.brown[400],
                 ),
                 Container(
-                  child:
-                      Text("${newDate.year}/${newDate.month}/${newDate.day}"),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${DateFormat("yMMMMEEEEd").format(newDate)}'),
+                      Text("Time: ${newTime.format(context)}")
+                    ],
+                  ),
                   padding: EdgeInsets.all(5),
                 )
               ],
@@ -96,7 +108,8 @@ class _AddTaskState extends State<AddTask> {
                     'description': descriptionControl,
                     'completed': false,
                     'DOC': newDate,
-                    "CREATED": DateTime.now()
+                    'created': DateTime.now(),
+                    // 'time': newTime,
                   },
                 );
                 Navigator.pop(context);

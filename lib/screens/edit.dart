@@ -35,7 +35,7 @@ class _EditState extends State<Edit> {
       context: context,
       initialDate: initialDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime(lastDate.year + 2),
+      lastDate: DateTime(lastDate.year + 1),
     );
     print(newDate);
 
@@ -52,8 +52,6 @@ class _EditState extends State<Edit> {
 
   @override
   Widget build(BuildContext context) {
-    textcontrol = widget.name;
-    descriptionControl = widget.description;
     firstDate = widget.doc.toDate();
     return Scaffold(
       appBar: AppBar(
@@ -114,8 +112,15 @@ class _EditState extends State<Edit> {
             ),
             color: Colors.blue,
             onPressed: () {
-              if (textcontrol.isEmpty || newDate == null) {
-                return;
+              if (newDate == null) {
+                newDate = widget.doc.toDate();
+              }
+
+              if (textcontrol.isEmpty) {
+                textcontrol = widget.name;
+              }
+              if (descriptionControl.isEmpty) {
+                descriptionControl = widget.description;
               }
               FirebaseFirestore.instance
                   .collection('tasks')

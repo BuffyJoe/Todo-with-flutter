@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/screens/add_task.dart';
@@ -8,6 +7,8 @@ import 'package:todo_app/navbar.dart';
 import 'package:todo_app/screens/edit.dart';
 import 'package:intl/intl.dart';
 
+import 'package:todo_app/appbar.dart';
+
 class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
@@ -15,27 +16,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // create task function
-  void _saveTask(TextEditingController _taskController,
-      TextEditingController _description) {
-    print(FirebaseFirestore.instance.collection('tasks').id);
-    if (_taskController.text.isEmpty) {
-      return;
-    }
-    final taskname = _taskController.text;
-    final description = _description.text;
-    FirebaseFirestore.instance.collection('tasks').add({
-      'name': taskname,
-      'description': description,
-      'completed': false,
-    });
-  }
 
   var counter = '';
   var tasks = FirebaseFirestore.instance.collection('tasks').snapshots().length;
 
   var selected = false;
   Widget _buildList(QuerySnapshot snapshot) {
-    DateTime Date;
     return Container(
       child: ListView.builder(
         itemCount: snapshot.docs.length,
@@ -61,7 +47,7 @@ class _HomeState extends State<Home> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Title: ${doc['name']}',
+                          '${doc['name'].toString()}',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -69,13 +55,21 @@ class _HomeState extends State<Home> {
                           textAlign: TextAlign.start,
                         ),
                         Text(
-                          'Due Date: ${DateTime.parse(doc['DOC'].toDate().toString())}',
+                          '${DateFormat("yMMMMEEEEd").format(doc['DOC'].toDate())}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                           ),
                           textAlign: TextAlign.start,
                         ),
+                        // Text(
+                        //   '${doc['time'].format()}',
+                        //   style: TextStyle(
+                        //     color: Colors.white,
+                        //     fontSize: 12,
+                        //   ),
+                        //   textAlign: TextAlign.start,
+                        // ),
                       ],
                     ),
                   ),
@@ -201,6 +195,8 @@ class _HomeState extends State<Home> {
                                             'name': doc['name'],
                                             'description': doc['description'],
                                             'completed': false,
+                                            'DOC': doc['DOC'],
+                                            'created': doc['created'],
                                           });
                                         },
                                       ),
@@ -242,26 +238,32 @@ class _HomeState extends State<Home> {
   final _taskController = TextEditingController();
 
   final _description = TextEditingController();
+  List items = ['sign up', 'setting', 'about us'];
 
   @override
   Widget build(BuildContext context) {
+    void onSelected(int value) {
+      switch (value) {
+        case 0:
+          Navigator.push(context, MaterialPageRoute(builder: (builder) {
+            return Home();
+          }));
+          break;
+        case 1:
+          Navigator.push(context, MaterialPageRoute(builder: (builder) {
+            return Completed();
+          }));
+          break;
+      }
+    }
+
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       bottomNavigationBar: BottomNavBar(),
-      appBar: AppBar(
-        leading: Icon(Icons.home),
-        title: Text('Todo'),
-        centerTitle: true,
-        toolbarHeight: deviceHeight * 0.08,
-        elevation: 0,
-        backgroundColor: Colors.blue,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.more_vert_outlined),
-          ),
-        ],
+      appBar: PreferredSize(
+        child: AppBarCustom('Todo'),
+        preferredSize: Size(double.infinity, 50),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(
