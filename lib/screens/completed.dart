@@ -117,16 +117,20 @@ class _CompletedState extends State<Completed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                Provider.of<UserProvider>(context, listen: false).signOut();
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.logout))
-        ],
+      appBar: PreferredSize(
+        child: AppBarCustom('Completed'),
+        preferredSize: Size(double.infinity, 50),
       ),
+      // AppBar(
+      //   actions: [
+      //     IconButton(
+      //         onPressed: () {
+      //           Provider.of<UserProvider>(context, listen: false).signOut();
+      //           Navigator.pop(context);
+      //         },
+      //         icon: Icon(Icons.logout))
+      //   ],
+      // ),
       bottomNavigationBar: BottomNavBar(),
       body: SingleChildScrollView(
         child: Container(

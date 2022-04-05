@@ -28,9 +28,6 @@ class _LoginState extends State<Login> {
 
     return Scaffold(
       backgroundColor: Colors.brown[50],
-      appBar: AppBar(
-        title: user != null ? Text(user.email) : Text('not logged in'),
-      ),
       bottomNavigationBar: Container(
         height: 50,
         child: Column(
@@ -48,9 +45,37 @@ class _LoginState extends State<Login> {
       ),
       body: SingleChildScrollView(
         child: Container(
+          color: Colors.brown[50],
+          height: 700,
           padding: EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Container(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'My Todo',
+                      style: TextStyle(
+                        fontFamily: 'Boge',
+                        fontSize: 30,
+                      ),
+                    ),
+                    Text(
+                      'Sign in to continue',
+                      style: TextStyle(
+                        fontFamily: 'Chicken Relief',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               TextField(
                 decoration: InputDecoration(
                     border: OutlineInputBorder(), label: Text('email')),
@@ -89,21 +114,21 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       onTap: () {
-                        Provider.of<UserProvider>(context, listen: false)
-                            .signIn(email: email.text, password: password.text);
+                        if (email.text.isEmpty || password.text.isEmpty) return;
+                        setState(() {
+                          change = !change;
+                        });
+                        Future.delayed(const Duration(seconds: 3), () {
+                          Provider.of<UserProvider>(context, listen: false)
+                              .signIn(
+                                  email: email.text, password: password.text);
+                          setState(() {
+                            change = !change;
+                          });
+                        });
                       },
                     )
                   : CircularProgressIndicator(),
-              RaisedButton(
-                child: Text('signout'),
-                onPressed: () async {
-                  FirebaseAuth.instance.signOut();
-
-                  setState(() {
-                    user;
-                  });
-                },
-              )
             ],
           ),
         ),

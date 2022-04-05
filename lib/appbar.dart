@@ -54,6 +54,10 @@ class _AppBarCustomState extends State<AppBarCustom> {
           break;
         case 1:
           Provider.of<UserProvider>(context, listen: false).signOut();
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (builder) {
+            return MyApp();
+          }), (Route<dynamic> route) => false);
           break;
         case 2:
           followDeveloper();
@@ -66,7 +70,7 @@ class _AppBarCustomState extends State<AppBarCustom> {
           onPressed: () {
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (builder) {
-              return Home();
+              return MyApp();
             }), (Route<dynamic> route) => false);
           },
           icon: Icon(Icons.home)),

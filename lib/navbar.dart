@@ -43,7 +43,8 @@ class BottomNavBar extends StatelessWidget {
             padding: const EdgeInsets.only(right: 50),
             child: IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/completed');
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/completed', (route) => false);
                 },
                 iconSize: 30,
                 color: Colors.white,
