@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/screens/home.dart';
 
 class AddTask extends StatefulWidget {
   @override
@@ -38,6 +40,7 @@ class _AddTaskState extends State<AddTask> {
     });
   }
 
+  User user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +105,7 @@ class _AddTaskState extends State<AddTask> {
                   if (textcontrol.isEmpty) {
                     return;
                   }
-                  FirebaseFirestore.instance.collection('tasks').add(
+                  FirebaseFirestore.instance.collection(user.email).add(
                     {
                       'name': textcontrol,
                       'description': descriptionControl,

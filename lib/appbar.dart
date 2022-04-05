@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
+import 'package:todo_app/main.dart';
+import 'package:todo_app/providers/user_provider.dart';
 import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
-class AppBarCustom extends StatelessWidget {
+class AppBarCustom extends StatefulWidget {
   final String title;
   AppBarCustom(this.title);
 
+  @override
+  State<AppBarCustom> createState() => _AppBarCustomState();
+}
+
+class _AppBarCustomState extends State<AppBarCustom> {
   followDeveloper() async {
     await FlutterWebBrowser.openWebPage(
       url: "https://linkedin.com/in/okafor-onyekachukwu-133989209/",
@@ -31,6 +40,8 @@ class AppBarCustom extends StatelessWidget {
     );
   }
 
+  User user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     void onSelected(int value) {
@@ -38,16 +49,13 @@ class AppBarCustom extends StatelessWidget {
         case 0:
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (builder) {
-            return Home();
+            return MyApp();
           }), (Route<dynamic> route) => false);
           break;
         case 1:
-          Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (builder) {
-            return Completed();
-          }), (Route<dynamic> route) => false);
+          Provider.of<UserProvider>(context, listen: false).signOut();
           break;
-        case 3:
+        case 2:
           followDeveloper();
           break;
       }
@@ -62,7 +70,7 @@ class AppBarCustom extends StatelessWidget {
             }), (Route<dynamic> route) => false);
           },
           icon: Icon(Icons.home)),
-      title: Text(title),
+      title: Text(widget.title),
       centerTitle: true,
       elevation: 0,
       backgroundColor: Colors.blue,
@@ -77,7 +85,7 @@ class AppBarCustom extends StatelessWidget {
             },
             color: Colors.brown[50],
             elevation: 20,
-            icon: Icon(Icons.more_vert_outlined),
+            icon: Icon(Icons.arrow_drop_down_circle),
             itemBuilder: (context) {
               return [
                 PopupMenuItem(

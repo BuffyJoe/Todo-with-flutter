@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -49,7 +50,7 @@ class _EditState extends State<Edit> {
   }
 
   DateTime firstDate;
-
+  User user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     firstDate = widget.doc.toDate();
@@ -123,7 +124,7 @@ class _EditState extends State<Edit> {
                   descriptionControl = widget.description;
                 }
                 FirebaseFirestore.instance
-                    .collection('tasks')
+                    .collection(user.email)
                     .doc(widget.task)
                     .update(
                   {

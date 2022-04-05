@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:todo_app/login.dart';
 import 'package:todo_app/screens/home.dart';
 
 class SplashScreenWidget extends StatefulWidget {
@@ -8,13 +10,22 @@ class SplashScreenWidget extends StatefulWidget {
 }
 
 class _SplashScreenWidgetState extends State<SplashScreenWidget> {
+  User user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     Future.delayed(Duration(seconds: 5), () {
+      // if (user == null) {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (builder) {
-        return Home();
+        return Login();
       }), (Route<dynamic> route) => false);
+      // }
+      // else {
+      //   Navigator.pushAndRemoveUntil(context,
+      //       MaterialPageRoute(builder: (builder) {
+      //     return Home();
+      //   }), (Route<dynamic> route) => false);
+      // }
     });
     super.initState();
   }

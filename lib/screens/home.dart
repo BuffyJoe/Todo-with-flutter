@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/login.dart';
 import 'package:todo_app/screens/add_task.dart';
 import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/navbar.dart';
@@ -17,6 +19,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // create task function
+  @override
+  User user = FirebaseAuth.instance.currentUser;
 
   // ask before exiting the app
   int backPressCounter = 1;
@@ -50,7 +54,6 @@ class _HomeState extends State<Home> {
   }
 
   var counter = '';
-  var tasks = FirebaseFirestore.instance.collection('tasks').snapshots().length;
 
   var selected = false;
   Widget _buildList(QuerySnapshot snapshot) {
@@ -68,7 +71,7 @@ class _HomeState extends State<Home> {
               height: detailedView ? 170 : 70,
               color: Colors.blue,
               child: Slidable(
-                actionExtentRatio: 0.3,
+                actionExtentRatio: 0.2,
                 key: ValueKey(doc.id),
                 child: ListTile(
                   title: Container(
@@ -137,7 +140,7 @@ class _HomeState extends State<Home> {
                   GestureDetector(
                     onTap: () {
                       FirebaseFirestore.instance
-                          .collection("tasks")
+                          .collection(user.email)
                           .doc(doc.id)
                           .update({
                         'completed': true,
@@ -148,7 +151,7 @@ class _HomeState extends State<Home> {
                           label: 'undo',
                           onPressed: () {
                             FirebaseFirestore.instance
-                                .collection('tasks')
+                                .collection(user.email)
                                 .doc(doc.id)
                                 .update({'completed': false});
                           },
@@ -216,7 +219,7 @@ class _HomeState extends State<Home> {
                                   color: Colors.red,
                                   onPressed: () {
                                     FirebaseFirestore.instance
-                                        .collection('tasks')
+                                        .collection(user.email)
                                         .doc(doc.id)
                                         .delete();
                                     Navigator.pop(context);
@@ -227,7 +230,7 @@ class _HomeState extends State<Home> {
                                         label: 'undo',
                                         onPressed: () {
                                           FirebaseFirestore.instance
-                                              .collection('tasks')
+                                              .collection(user.email)
                                               .add({
                                             'name': doc['name'],
                                             'description': doc['description'],
@@ -294,9 +297,11 @@ class _HomeState extends State<Home> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        bottomNavigationBar: BottomNavBar(),
+        bottomNavigationBar: BottomNavBar(
+          home: true,
+        ),
         appBar: PreferredSize(
-          child: AppBarCustom('Todo'),
+          child: AppBarCustom(user.email),
           preferredSize: Size(double.infinity, 50),
         ),
         floatingActionButton: FloatingActionButton(
@@ -311,7 +316,9 @@ class _HomeState extends State<Home> {
             }));
           },
           elevation: 5,
+          backgroundColor: Colors.blue,
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: Container(
           height: deviceHeight * 0.92,
           decoration: BoxDecoration(
@@ -333,7 +340,8 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text('Ongoing Tasks'),
                     ),
-                    if (FirebaseFirestore.instance.collection('tasks') != null)
+                    if (FirebaseFirestore.instance.collection(user.email) !=
+                        null)
                       GestureDetector(
                         onTap: () {
                           detailedView = !detailedView;
@@ -363,7 +371,7 @@ class _HomeState extends State<Home> {
                     return Expanded(child: _buildList(snapshot.data));
                   },
                   stream: FirebaseFirestore.instance
-                      .collection("tasks")
+                      .collection(user.email)
                       .where('completed', isEqualTo: false)
                       .snapshots(),
                 ),
