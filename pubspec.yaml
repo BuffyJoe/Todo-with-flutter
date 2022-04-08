@@ -41,6 +41,7 @@ dependencies:
   flutter_web_browser:
   firebase_auth: 
   provider:
+  google_fonts:
 dependency_overrides:
   firebase_messaging_platform_interface: 3.1.6
   firebase_crashlytics_platform_interface: 3.1.13
@@ -104,17 +105,21 @@ flutter:
   fonts:
     - family: Boge
       fonts:
-        - asset: assets/fonts/Boge.ttf
+        - asset: Assets/fonts/Boge.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
     - family: Organic Relief
       fonts:
-        - asset: assets/fonts/Organic_Relief.ttf
+        - asset: Assets/fonts/Organic_Relief.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
     - family: Chicken Hunter
       fonts:
-        - asset: assets/fonts/Chicken Hunter.ttf
+        - asset: Assets/fonts/Chicken Hunter.ttf
+    
+    - family: Monoton Regular
+      fonts:
+        - asset: Assets/fonts/Monoton-Regular.ttf
     #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

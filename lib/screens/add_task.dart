@@ -14,7 +14,7 @@ class _AddTaskState extends State<AddTask> {
 
   var descriptionControl = '';
   var initialDate = DateTime.now();
-
+  var loading = false;
   var lastDate = DateTime.now();
   DateTime newDate = DateTime.now();
   TimeOfDay newTime = TimeOfDay.now();
@@ -44,6 +44,7 @@ class _AddTaskState extends State<AddTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('New Task'),
       ),
@@ -95,29 +96,39 @@ class _AddTaskState extends State<AddTask> {
                   )
                 ],
               ),
-              RaisedButton(
-                child: Text(
-                  'done',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.blue,
-                onPressed: () {
-                  if (textcontrol.isEmpty) {
-                    return;
-                  }
-                  FirebaseFirestore.instance.collection(user.email).add(
-                    {
-                      'name': textcontrol,
-                      'description': descriptionControl,
-                      'completed': false,
-                      'DOC': newDate,
-                      'created': DateTime.now(),
-                      'time': newTime.format(context).toString(),
-                    },
-                  );
-                  Navigator.pop(context);
-                },
-              ),
+              loading
+                  ? CircularProgressIndicator()
+                  : RaisedButton(
+                      child: Text(
+                        'done',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                      onPressed: () {
+                        if (textcontrol.isEmpty) {
+                          return;
+                        }
+                        setState(() {
+                          loading = !loading;
+                        });
+                        Future.delayed(Duration(seconds: 4), () {});
+                        FirebaseFirestore.instance.collection(user.email).add(
+                          {
+                            'name': textcontrol,
+                            'description': descriptionControl,
+                            'completed': false,
+                            'DOC': newDate,
+                            'created': DateTime.now(),
+                            'time': newTime.format(context).toString(),
+                          },
+                        );
+
+                        // setState(() {
+                        //   loading = !loading;
+                        // });
+                        Navigator.pop(context);
+                      },
+                    ),
             ],
           ),
         ),

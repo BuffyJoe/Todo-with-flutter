@@ -14,14 +14,16 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   User user = FirebaseAuth.instance.currentUser;
-
+  var error = false;
   var change = true;
   var showPassword = true;
-  var error = false;
+  var signUp = false;
 
   var email = TextEditingController();
 
   var password = TextEditingController();
+
+  var password2 = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Future<User> CreateAccount(String email, String password) async {}
@@ -32,13 +34,19 @@ class _LoginState extends State<Login> {
         height: 50,
         child: Column(
           children: [
-            Text('Don\'t have an account?'),
+            Text(signUp
+                ? 'Already Have an Account?'
+                : 'Don\'t have an account?'),
             GestureDetector(
               child: Text(
-                'Sign-up Instead',
+                signUp ? 'Log-in instead' : 'Sign-up Instead',
                 style: TextStyle(color: Colors.blue),
               ),
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  signUp = !signUp;
+                });
+              },
             ),
           ],
         ),
@@ -58,17 +66,19 @@ class _LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'My Todo',
+                      'MY TODO',
                       style: TextStyle(
-                        fontFamily: 'Boge',
-                        fontSize: 30,
-                      ),
+                          fontWeight: FontWeight.w200,
+                          fontFamily: 'Monoton Regular',
+                          fontSize: 50,
+                          color: Colors.blue),
                     ),
                     Text(
-                      'Sign in to continue',
-                      style: TextStyle(
-                        fontFamily: 'Chicken Relief',
-                      ),
+                      signUp
+                          ? 'Create an Account to get started'
+                          : 'Sign in to continue',
+                      style:
+                          TextStyle(fontFamily: 'Chicken Hunter', fontSize: 32),
                     ),
                   ],
                 ),
@@ -91,6 +101,18 @@ class _LoginState extends State<Login> {
                 controller: password,
               ),
               SizedBox(
+                height: signUp ? 20 : 0,
+              ),
+              signUp
+                  ? TextField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          label: Text('confirm password')),
+                      obscureText: showPassword,
+                      controller: password2,
+                    )
+                  : Container(),
+              SizedBox(
                 height: 10,
               ),
               change
@@ -101,7 +123,7 @@ class _LoginState extends State<Login> {
                         padding: EdgeInsets.all(10),
                         alignment: Alignment.center,
                         child: Text(
-                          'Submit',
+                          signUp ? 'Create' : 'Submit',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
@@ -119,16 +141,52 @@ class _LoginState extends State<Login> {
                           change = !change;
                         });
                         Future.delayed(const Duration(seconds: 3), () {
-                          Provider.of<UserProvider>(context, listen: false)
-                              .signIn(
-                                  email: email.text, password: password.text);
+                          if (signUp) {
+                            Provider.of<UserProvider>(context, listen: false)
+                                .signUp(
+                                    email: email.text,
+                                    password: password.text,
+                                    password2: password2.text);
+                          } else {
+                            print(Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .error);
+                            Provider.of<UserProvider>(context, listen: false)
+                                .signIn(
+                                    email: email.text, password: password.text);
+                            print(Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .error);
+                          }
                           setState(() {
                             change = !change;
                           });
+                          if (Provider.of<UserProvider>(context, listen: false)
+                                  .error !=
+                              null) {
+                            setState(() {
+                              error = !error;
+                            });
+                            Future.delayed(Duration(seconds: 3), () {
+                              setState(() {
+                                error = !error;
+                              });
+                            });
+                          }
                         });
                       },
                     )
                   : CircularProgressIndicator(),
+              if (error)
+                Center(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      Provider.of<UserProvider>(context, listen: false).error,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                )
             ],
           ),
         ),

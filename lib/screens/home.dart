@@ -294,6 +294,7 @@ class _HomeState extends State<Home> {
 
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
+    print(user.email);
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(

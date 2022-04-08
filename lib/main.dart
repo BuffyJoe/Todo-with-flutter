@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:splashscreen/splashscreen.dart';
 import 'package:todo_app/login.dart';
 import 'package:todo_app/providers/user_provider.dart';
 import 'package:todo_app/screens/completed.dart';
@@ -55,22 +56,4 @@ class MyApp extends StatelessWidget {
       },
     );
   }
-}
-
-Widget _getLandingPage() {
-  return StreamBuilder<User>(
-    stream: FirebaseAuth.instance.authStateChanges(),
-    builder: (BuildContext context, snapshot) {
-      if (snapshot.hasData) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return Home();
-      } else {
-        return Login();
-      }
-    },
-  );
 }
