@@ -7,6 +7,7 @@ import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/wrapper.dart';
 
 class AppBarCustom extends StatefulWidget {
   final String title;
@@ -49,14 +50,14 @@ class _AppBarCustomState extends State<AppBarCustom> {
         case 0:
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (builder) {
-            return MyApp();
+            return Wrapper();
           }), (Route<dynamic> route) => false);
           break;
         case 1:
           Provider.of<UserProvider>(context, listen: false).signOut();
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (builder) {
-            return MyApp();
+            return Wrapper();
           }), (Route<dynamic> route) => false);
           break;
         case 2:
@@ -70,7 +71,7 @@ class _AppBarCustomState extends State<AppBarCustom> {
           onPressed: () {
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (builder) {
-              return MyApp();
+              return Wrapper();
             }), (Route<dynamic> route) => false);
           },
           icon: Icon(Icons.home)),

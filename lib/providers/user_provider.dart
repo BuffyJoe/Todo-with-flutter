@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,8 @@ class UserProvider with ChangeNotifier {
   User _uservar = FirebaseAuth.instance.currentUser;
 
   User get user => _uservar;
-  String error;
+  String _error;
+  String get error => _error;
 
   void signOut() {
     FirebaseAuth.instance.signOut();
@@ -17,15 +19,33 @@ class UserProvider with ChangeNotifier {
       {@required String email,
       @required String password,
       @required String password2}) async {
-    if (password != password2) return;
-
+    if (password != password2) {
+      Fluttertoast.showToast(
+        msg: 'Password does not match',
+        gravity: ToastGravity.TOP,
+        textColor: Colors.red,
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.transparent,
+        fontSize: 18,
+      );
+      return;
+    }
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       _uservar = userCredential.user;
       notifyListeners();
     } on FirebaseAuthException catch (e) {
-      error = Errors.show(e.toString());
+      print('in');
+      print(e.code);
+      Fluttertoast.showToast(
+        msg: Errors.show(e.code),
+        gravity: ToastGravity.TOP,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Color.fromRGBO(255, 0, 0, 0.6),
+        fontSize: 15,
+      );
       notifyListeners();
     }
   }
@@ -37,9 +57,15 @@ class UserProvider with ChangeNotifier {
       _uservar = userCredential.user;
       notifyListeners();
     } on FirebaseAuthException catch (e) {
-      error = e.code.toString();
-      print(error);
-
+      print(e.code);
+      Fluttertoast.showToast(
+        msg: Errors.show(e.code),
+        gravity: ToastGravity.TOP,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Color.fromRGBO(255, 0, 0, 0.6),
+        fontSize: 15,
+      );
       notifyListeners();
     }
   }
@@ -48,20 +74,21 @@ class UserProvider with ChangeNotifier {
 class Errors {
   static String show(String errorCode) {
     switch (errorCode) {
-      case 'ERROR_EMAIL_ALREADY_IN_USE':
-        return "This e-mail address is already in use, please use a different e-mail address.";
+      case 'invalid-email':
+        return "The email address is invalid, write a valid email address to continue.";
 
-      case 'ERROR_INVALID_EMAIL':
-        return "The email address is badly formatted.";
-
-      case 'ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL':
-        return "The e-mail address in your Facebook account has been registered in the system before. Please login by trying other methods with this e-mail address.";
+      case 'user-not-found':
+        return "This email is not recorgnized, user not found";
 
       case 'wrong-password':
         return "E-mail address or password is incorrect.";
 
+      case 'too-many-requests':
+        return 'You have made too many attempts, try again later';
+      case 'email-already-in-use':
+        return 'Email already exists, try Logging in instead';
       default:
-        return "An error has occurred";
+        return "An error occurred, check your internet connection";
     }
   }
 }

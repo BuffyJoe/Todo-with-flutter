@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_app/screens/home.dart';
 
 class AddTask extends StatefulWidget {
   @override
@@ -11,7 +10,6 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   var textcontrol = '';
-
   var descriptionControl = '';
   var initialDate = DateTime.now();
   var loading = false;
@@ -111,7 +109,7 @@ class _AddTaskState extends State<AddTask> {
                         setState(() {
                           loading = !loading;
                         });
-                        Future.delayed(Duration(seconds: 4), () {});
+
                         FirebaseFirestore.instance.collection(user.email).add(
                           {
                             'name': textcontrol,
@@ -120,6 +118,7 @@ class _AddTaskState extends State<AddTask> {
                             'DOC': newDate,
                             'created': DateTime.now(),
                             'time': newTime.format(context).toString(),
+                            'expired': false,
                           },
                         );
 

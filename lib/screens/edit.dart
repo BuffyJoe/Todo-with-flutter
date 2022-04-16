@@ -9,12 +9,14 @@ class Edit extends StatefulWidget {
   final String description;
   final bool completed;
   final Timestamp doc;
+  final bool expired;
   Edit(
       {this.task,
       this.name,
       this.description,
       this.completed,
-      @required this.doc});
+      this.doc,
+      this.expired});
 
   @override
   State<Edit> createState() => _EditState();

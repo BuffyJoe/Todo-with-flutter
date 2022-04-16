@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:splashscreen/splashscreen.dart';
-import 'package:todo_app/login.dart';
-import 'package:todo_app/screens/home.dart';
+import 'package:todo_app/wrapper.dart';
 
 class SplashScreenWidget extends StatefulWidget {
   @override
@@ -17,7 +15,7 @@ class _SplashScreenWidgetState extends State<SplashScreenWidget> {
       // if (user == null) {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (builder) {
-        return Login();
+        return Wrapper();
       }), (Route<dynamic> route) => false);
       // }
       // else {

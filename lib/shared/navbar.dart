@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/screens/add_task.dart';
-import 'package:todo_app/screens/completed.dart';
-import 'package:todo_app/screens/home.dart';
 
 class BottomNavBar extends StatelessWidget {
   final bool home;
