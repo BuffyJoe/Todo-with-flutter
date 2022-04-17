@@ -1,12 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:todo_app/screens/add_task.dart';
 import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/shared/navbar.dart';
 import 'package:todo_app/shared/appbar.dart';
-import 'package:todo_app/screens/shared/slidable.dart';
+import 'package:todo_app/widgets/activeTaskSlidableWidget.dart';
+import 'package:todo_app/widgets/expiredTaskSlidableWidget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -80,8 +83,8 @@ class _HomeState extends State<Home> {
               height: detailedView ? 170 : 70,
               color: doc['expired'] ? Colors.red[300] : Colors.blue,
               child: !doc['expired']
-                  ? ActiveTaskSlidableTile(doc)
-                  : ExpiredTaskSlidableTile(doc),
+                  ? ActiveTaskSlidableWidget(doc)
+                  : ExpiredTaskSlidableWidget(doc),
             ),
           );
         },

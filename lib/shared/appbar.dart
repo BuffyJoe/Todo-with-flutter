@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
-import 'package:todo_app/main.dart';
-import 'package:todo_app/providers/user_provider.dart';
-import 'package:todo_app/screens/completed.dart';
-import 'package:todo_app/screens/home.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+
+import 'package:todo_app/providers/user_provider.dart';
 import 'package:todo_app/wrapper.dart';
 
 class AppBarCustom extends StatefulWidget {

@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo_app/shared/navbar.dart';
 import 'package:todo_app/shared/appbar.dart';
-import 'package:intl/intl.dart';
-import 'package:todo_app/screens/shared/slidable.dart';
+import 'package:todo_app/widgets/completedTaskSlidableWidget.dart';
 
 class Completed extends StatefulWidget {
   @override
@@ -17,7 +16,7 @@ class _CompletedState extends State<Completed> {
   var selected = false;
   User user = FirebaseAuth.instance.currentUser;
   Widget _buildList(QuerySnapshot snapshot) {
-    return CompletedTaskSlidableTile(snapshot);
+    return CompletedTaskSlidableWidget(snapshot);
   }
 
   var detailedView = false;
