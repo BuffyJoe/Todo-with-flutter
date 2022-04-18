@@ -82,9 +82,9 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.zero,
               height: detailedView ? 170 : 70,
               color: doc['expired'] ? Colors.red[300] : Colors.blue,
-              child: !doc['expired']
-                  ? ActiveTaskSlidableWidget(doc)
-                  : ExpiredTaskSlidableWidget(doc),
+              child: doc['expired']
+                  ? ExpiredTaskSlidableWidget(doc)
+                  : ActiveTaskSlidableWidget(doc),
             ),
           );
         },
@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
           preferredSize: Size(double.infinity, 50),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(
+          child: const Icon(
             Icons.add,
             color: Colors.white,
             size: 40,
@@ -157,7 +157,7 @@ class _HomeState extends State<Home> {
               children: [
                 Row(
                   children: [
-                    Padding(
+                    const Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text('Ongoing Tasks'),
                     ),

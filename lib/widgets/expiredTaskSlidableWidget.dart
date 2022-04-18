@@ -64,7 +64,7 @@ class ExpiredTaskSlidableWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Description: ',
                       style: TextStyle(
                         color: Colors.black,
@@ -94,13 +94,13 @@ class ExpiredTaskSlidableWidget extends StatelessWidget {
                     content: Text('Delete \" ${doc['name']} \"?'),
                     actions: [
                       FlatButton(
-                        child: Text('No'),
+                        child: const Text('No'),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
                       FlatButton(
-                        child: Text('Yes'),
+                        child: const Text('Yes'),
                         color: Colors.red,
                         onPressed: () {
                           FirebaseFirestore.instance

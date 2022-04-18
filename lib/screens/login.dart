@@ -59,7 +59,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'MY TODO',
                     style: TextStyle(
                         fontWeight: FontWeight.w200,
@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             TextField(
@@ -85,7 +85,7 @@ class _LoginState extends State<Login> {
                   border: OutlineInputBorder(), label: Text('email')),
               controller: email,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             TextField(
@@ -106,7 +106,7 @@ class _LoginState extends State<Login> {
                     controller: password2,
                   )
                 : Container(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             change

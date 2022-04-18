@@ -94,7 +94,7 @@ class _AppBarCustomState extends State<AppBarCustom> {
                 PopupMenuItem(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
+                    children: const [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
@@ -110,7 +110,7 @@ class _AppBarCustomState extends State<AppBarCustom> {
                 PopupMenuItem(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
+                    children: const [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
@@ -126,9 +126,9 @@ class _AppBarCustomState extends State<AppBarCustom> {
                 PopupMenuItem(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
+                    children: const [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.developer_mode,
                           color: Colors.blue,

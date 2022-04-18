@@ -30,7 +30,7 @@ class BottomNavBar extends StatelessWidget {
                   ),
                 )
               : Padding(
-                  padding: EdgeInsets.only(left: 50),
+                  padding: const EdgeInsets.only(left: 50),
                   child: IconButton(
                     icon: Icon(Icons.cancel),
                     color: Colors.white,

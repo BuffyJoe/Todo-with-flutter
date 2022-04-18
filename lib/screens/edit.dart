@@ -81,13 +81,13 @@ class _EditState extends State<Edit> {
               decoration:
                   InputDecoration(labelText: 'Task Description (optional)'),
             ),
-            Container(
+            const SizedBox(
               height: 10,
             ),
             Row(
               children: [
                 FlatButton(
-                  child: Text(
+                  child: const Text(
                     'Date Picker',
                     style: TextStyle(color: Colors.blue),
                   ),
@@ -109,7 +109,7 @@ class _EditState extends State<Edit> {
               ],
             ),
             RaisedButton(
-              child: Text(
+              child: const Text(
                 'done',
                 style: TextStyle(color: Colors.white),
               ),

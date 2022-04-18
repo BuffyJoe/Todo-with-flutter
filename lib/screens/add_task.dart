@@ -45,7 +45,7 @@ class _AddTaskState extends State<AddTask> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('New Task'),
+        title: const Text('New Task'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -68,13 +68,13 @@ class _AddTaskState extends State<AddTask> {
                 decoration:
                     InputDecoration(labelText: 'Task Description (optional)'),
               ),
-              Container(
+              const SizedBox(
                 height: 10,
               ),
               Row(
                 children: [
                   FlatButton(
-                    child: Text(
+                    child: const Text(
                       'Date Picker',
                       style: TextStyle(color: Colors.blue),
                     ),

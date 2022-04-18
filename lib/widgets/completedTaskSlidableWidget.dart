@@ -93,7 +93,7 @@ class CompletedTaskSlidableWidget extends StatelessWidget {
                     child: Container(
                         height: 70,
                         color: Colors.red,
-                        child: Icon(
+                        child: const Icon(
                           Icons.delete,
                           color: Colors.white,
                         )),
@@ -105,6 +105,5 @@ class CompletedTaskSlidableWidget extends StatelessWidget {
         },
       ),
     );
-    ;
   }
 }
