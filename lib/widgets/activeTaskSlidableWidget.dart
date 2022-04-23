@@ -97,10 +97,7 @@ class ActiveTaskSlidableWidget extends StatelessWidget {
       actions: [
         GestureDetector(
           onTap: () {
-            FirebaseFirestore.instance
-                .collection(user.email)
-                .doc(doc.id)
-                .update({
+            FirebaseFirestore.instance.collection('tasks').doc(doc.id).update({
               'completed': true,
             });
             final snackBar = SnackBar(
@@ -109,7 +106,7 @@ class ActiveTaskSlidableWidget extends StatelessWidget {
                 label: 'undo',
                 onPressed: () {
                   FirebaseFirestore.instance
-                      .collection(user.email)
+                      .collection('tasks')
                       .doc(doc.id)
                       .update({'completed': false});
                 },
@@ -177,7 +174,7 @@ class ActiveTaskSlidableWidget extends StatelessWidget {
                         color: Colors.red,
                         onPressed: () {
                           FirebaseFirestore.instance
-                              .collection(user.email)
+                              .collection('tasks')
                               .doc(doc.id)
                               .delete();
                           Navigator.pop(context);
@@ -187,12 +184,13 @@ class ActiveTaskSlidableWidget extends StatelessWidget {
                               label: 'undo',
                               onPressed: () {
                                 FirebaseFirestore.instance
-                                    .collection(user.email)
+                                    .collection('tasks')
                                     .add({
                                   'name': doc['name'],
                                   'description': doc['description'],
                                   'completed': false,
                                   'DOC': doc['DOC'],
+                                  'id': user.email,
                                   'created': doc['created'],
                                   'time': doc['time'],
                                   'expired': doc['expired']

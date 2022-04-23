@@ -104,7 +104,7 @@ class ExpiredTaskSlidableWidget extends StatelessWidget {
                         color: Colors.red,
                         onPressed: () {
                           FirebaseFirestore.instance
-                              .collection(user.email)
+                              .collection('tasks')
                               .doc(doc.id)
                               .delete();
                           Navigator.pop(context);
@@ -114,9 +114,10 @@ class ExpiredTaskSlidableWidget extends StatelessWidget {
                               label: 'undo',
                               onPressed: () {
                                 FirebaseFirestore.instance
-                                    .collection(user.email)
+                                    .collection('tasks')
                                     .add({
                                   'name': doc['name'],
+                                  'id': user.email,
                                   'description': doc['description'],
                                   'completed': false,
                                   'DOC': doc['DOC'],

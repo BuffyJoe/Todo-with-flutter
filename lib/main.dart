@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/screens/expired.dart';
 
 import 'package:todo_app/screens/login.dart';
 import 'package:todo_app/providers/user_provider.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        brightness: Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
       home: SplashScreenWidget(),
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/completed': (context) => Completed(),
         '/login': (context) => Login(),
+        '/expired': (context) => Expired(),
       },
     );
   }

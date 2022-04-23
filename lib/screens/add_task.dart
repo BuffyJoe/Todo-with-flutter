@@ -111,9 +111,13 @@ class _AddTaskState extends State<AddTask> {
                           loading = !loading;
                         });
 
-                        FirebaseFirestore.instance.collection(user.email).add(
+                        FirebaseFirestore.instance
+                            .collection('tasks')
+                            .doc(DateTime.now().toString())
+                            .set(
                           {
                             'name': textcontrol,
+                            'id': user.email,
                             'description': descriptionControl,
                             'completed': false,
                             'DOC': newDate,

@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
     Future<User> CreateAccount(String email, String password) async {}
 
     return Scaffold(
-      backgroundColor: Colors.brown[50],
+      // backgroundColor: Colors.brown[50],
       bottomNavigationBar: Container(
         height: 50,
         child: Column(
@@ -47,7 +47,7 @@ class _LoginState extends State<Login> {
         ),
       ),
       body: Container(
-        color: Colors.brown[50],
+        // color: Colors.brown[50],
         height: 700,
         padding: EdgeInsets.all(20),
         child: Column(

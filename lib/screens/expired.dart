@@ -6,18 +6,40 @@ import 'package:todo_app/screens/add_task.dart';
 
 import 'package:todo_app/shared/navbar.dart';
 import 'package:todo_app/shared/appbar.dart';
-import 'package:todo_app/widgets/completedTaskSlidableWidget.dart';
+import 'package:todo_app/widgets/expiredTaskSlidableWidget.dart';
 
-class Completed extends StatefulWidget {
+class Expired extends StatefulWidget {
   @override
-  State<Completed> createState() => _CompletedState();
+  State<Expired> createState() => _ExpiredState();
 }
 
-class _CompletedState extends State<Completed> {
+class _ExpiredState extends State<Expired> {
   var selected = false;
   User user = FirebaseAuth.instance.currentUser;
   Widget _buildList(QuerySnapshot snapshot) {
-    return CompletedTaskSlidableWidget(snapshot);
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('Assets/images/Logo.png'),
+        ),
+      ),
+      child: ListView.builder(
+        itemCount: snapshot.docs.length,
+        itemBuilder: (context, index) {
+          final doc = snapshot.docs[index];
+          return Container(
+              margin: EdgeInsets.only(left: 5, right: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.red[300],
+              ),
+              padding: EdgeInsets.zero,
+              height: detailedView ? 170 : 70,
+              child: ExpiredTaskSlidableWidget(doc));
+        },
+      ),
+    );
   }
 
   var detailedView = false;
@@ -26,7 +48,7 @@ class _CompletedState extends State<Completed> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        child: AppBarCustom('Completed'),
+        child: AppBarCustom('Expired'),
         preferredSize: Size(double.infinity, 60),
       ),
       floatingActionButton: FloatingActionButton(
@@ -48,7 +70,7 @@ class _CompletedState extends State<Completed> {
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.92,
-          // color: Colors.red,
+          // color: Colors.brown[50],
           padding: EdgeInsets.symmetric(
             vertical: MediaQuery.of(context).size.height * 0.02,
           ),
@@ -69,7 +91,7 @@ class _CompletedState extends State<Completed> {
                 },
                 stream: FirebaseFirestore.instance
                     .collection('tasks')
-                    .where('completed', isEqualTo: true)
+                    .where('expired', isEqualTo: true)
                     .orderBy('DOC', descending: true)
                     .snapshots(),
               ),

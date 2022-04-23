@@ -9,7 +9,6 @@ import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/shared/navbar.dart';
 import 'package:todo_app/shared/appbar.dart';
 import 'package:todo_app/widgets/activeTaskSlidableWidget.dart';
-import 'package:todo_app/widgets/expiredTaskSlidableWidget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -68,24 +67,19 @@ class _HomeState extends State<Home> {
               (dateTime.day < today.day &&
                   dateTime.month <= today.month &&
                   dateTime.year <= today.year)) {
-            FirebaseFirestore.instance
-                .collection(user.email)
-                .doc(doc.id)
-                .update({
+            FirebaseFirestore.instance.collection('tasks').doc(doc.id).update({
               'expired': true,
             });
           } else {}
-          return Card(
-            color: Colors.black54,
-            elevation: 5,
-            child: Container(
-              padding: EdgeInsets.zero,
-              height: detailedView ? 170 : 70,
-              color: doc['expired'] ? Colors.red[300] : Colors.blue,
-              child: doc['expired']
-                  ? ExpiredTaskSlidableWidget(doc)
-                  : ActiveTaskSlidableWidget(doc),
+          return Container(
+            margin: EdgeInsets.only(left: 5, right: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.blue,
             ),
+            padding: EdgeInsets.zero,
+            height: detailedView ? 170 : 70,
+            child: ActiveTaskSlidableWidget(doc),
           );
         },
       ),
@@ -94,9 +88,9 @@ class _HomeState extends State<Home> {
 
   var detailedView = false;
   List items = ['sign up', 'setting', 'about us'];
-
   @override
   Widget build(BuildContext context) {
+    // var snapshot = ;
     void onSelected(int value) {
       switch (value) {
         case 0:
@@ -123,12 +117,13 @@ class _HomeState extends State<Home> {
         ),
         appBar: PreferredSize(
           child: AppBarCustom(user.email),
-          preferredSize: Size(double.infinity, 50),
+          preferredSize: Size(double.infinity, 60),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue[400],
           child: const Icon(
             Icons.add,
-            color: Colors.white,
+            // color: Colors.white,
             size: 40,
           ),
           onPressed: () {
@@ -137,13 +132,12 @@ class _HomeState extends State<Home> {
             }));
           },
           elevation: 5,
-          backgroundColor: Colors.blue,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: Container(
           height: deviceHeight * 0.92,
           decoration: BoxDecoration(
-              color: Colors.brown[50],
+              // color: Colors.brown[50],
               image:
                   DecorationImage(image: AssetImage('Assets/images/Logo.png'))),
           padding: EdgeInsets.symmetric(
@@ -191,8 +185,11 @@ class _HomeState extends State<Home> {
                     return Expanded(child: _buildList(snapshot.data));
                   },
                   stream: FirebaseFirestore.instance
-                      .collection(user.email)
+                      .collection('tasks')
+                      .where('id', isEqualTo: user.email)
+                      .where('expired', isEqualTo: false)
                       .where('completed', isEqualTo: false)
+                      .orderBy('DOC', descending: true)
                       .snapshots(),
                 ),
               ],

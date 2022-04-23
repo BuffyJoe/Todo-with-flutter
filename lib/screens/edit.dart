@@ -126,7 +126,7 @@ class _EditState extends State<Edit> {
                   descriptionControl = widget.description;
                 }
                 FirebaseFirestore.instance
-                    .collection(user.email)
+                    .collection('tasks')
                     .doc(widget.task)
                     .update(
                   {

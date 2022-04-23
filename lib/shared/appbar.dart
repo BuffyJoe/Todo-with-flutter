@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'package:todo_app/providers/user_provider.dart';
+import 'package:todo_app/screens/expired.dart';
 import 'package:todo_app/wrapper.dart';
 
 class AppBarCustom extends StatefulWidget {
@@ -43,13 +44,10 @@ class _AppBarCustomState extends State<AppBarCustom> {
 
   @override
   Widget build(BuildContext context) {
+    final Brightness theme = Theme.of(context).brightness;
     void onSelected(int value) {
       switch (value) {
         case 0:
-          Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (builder) {
-            return Wrapper();
-          }), (Route<dynamic> route) => false);
           break;
         case 1:
           Provider.of<UserProvider>(context, listen: false).signOut();
@@ -73,10 +71,24 @@ class _AppBarCustomState extends State<AppBarCustom> {
             }), (Route<dynamic> route) => false);
           },
           icon: Icon(Icons.home)),
-      title: Text(widget.title),
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text(
+              'MY     TO-DO',
+              style: TextStyle(fontFamily: 'Monoton Regular'),
+            ),
+            Text(
+              widget.title,
+              style: TextStyle(fontSize: 14),
+            ),
+          ],
+        ),
+      ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Colors.blue,
+      // backgroundColor: Colors.blue,
       actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -86,7 +98,6 @@ class _AppBarCustomState extends State<AppBarCustom> {
             onSelected: (value) {
               onSelected(value);
             },
-            color: Colors.brown[50],
             elevation: 20,
             icon: Icon(Icons.arrow_drop_down_circle),
             itemBuilder: (context) {
@@ -94,15 +105,25 @@ class _AppBarCustomState extends State<AppBarCustom> {
                 PopupMenuItem(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.cancel,
-                          color: Colors.red,
-                        ),
-                      ),
-                      Text('expired')
+                    children: [
+                      theme == Brightness.dark
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.light_mode,
+                                // color: Colors.red,
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.dark_mode,
+                                color: Colors.black,
+                              ),
+                            ),
+                      theme == Brightness.dark
+                          ? Text('Light Mode')
+                          : Text('Dark Mode'),
                     ],
                   ),
                   value: 0,
@@ -110,12 +131,14 @@ class _AppBarCustomState extends State<AppBarCustom> {
                 PopupMenuItem(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const [
+                    children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.logout,
-                          color: Colors.blue,
+                          color: theme == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                         ),
                       ),
                       Text('Sign-Out')
@@ -126,12 +149,14 @@ class _AppBarCustomState extends State<AppBarCustom> {
                 PopupMenuItem(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const [
+                    children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.developer_mode,
-                          color: Colors.blue,
+                          color: theme == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                         ),
                       ),
                       Text('Contact Developer')
