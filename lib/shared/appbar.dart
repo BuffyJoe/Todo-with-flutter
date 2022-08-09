@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'package:todo_app/providers/user_provider.dart';
-import 'package:todo_app/screens/expired.dart';
+
 import 'package:todo_app/wrapper.dart';
+import 'package:todo_app/main.dart';
 
 class AppBarCustom extends StatefulWidget {
   final String title;
-  AppBarCustom(this.title);
+  final bool home;
+  AppBarCustom(this.title, {this.home = false});
 
   @override
   State<AppBarCustom> createState() => _AppBarCustomState();
@@ -21,10 +24,8 @@ class _AppBarCustomState extends State<AppBarCustom> {
     await FlutterWebBrowser.openWebPage(
       url: "https://linkedin.com/in/okafor-onyekachukwu-133989209/",
       customTabsOptions: const CustomTabsOptions(
-        colorScheme: CustomTabsColorScheme.dark,
-        toolbarColor: Colors.blue,
-        secondaryToolbarColor: Colors.green,
-        navigationBarColor: Colors.transparent,
+        colorScheme: CustomTabsColorScheme.system,
+        addDefaultShareMenuItem: false,
         shareState: CustomTabsShareState.on,
         instantAppsEnabled: true,
         showTitle: true,
@@ -47,8 +48,6 @@ class _AppBarCustomState extends State<AppBarCustom> {
     final Brightness theme = Theme.of(context).brightness;
     void onSelected(int value) {
       switch (value) {
-        case 0:
-          break;
         case 1:
           Provider.of<UserProvider>(context, listen: false).signOut();
           Navigator.pushAndRemoveUntil(context,
@@ -63,12 +62,21 @@ class _AppBarCustomState extends State<AppBarCustom> {
     }
 
     return AppBar(
+      // systemOverlayStyle: SystemUiOverlayStyle(
+      // systemNavigationBarColor: Colors.grey, // Navigation bar
+      // statusBarColor: Colors.transparent, // Status bar
+      // ),
+
       leading: IconButton(
           onPressed: () {
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (builder) {
-              return Wrapper();
-            }), (Route<dynamic> route) => false);
+            if (widget.home == true) {
+              return null;
+            } else {
+              return Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (builder) {
+                return Wrapper();
+              }), (Route<dynamic> route) => false);
+            }
           },
           icon: Icon(Icons.home)),
       title: Padding(
@@ -106,32 +114,6 @@ class _AppBarCustomState extends State<AppBarCustom> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      theme == Brightness.dark
-                          ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.light_mode,
-                                // color: Colors.red,
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.dark_mode,
-                                color: Colors.black,
-                              ),
-                            ),
-                      theme == Brightness.dark
-                          ? Text('Light Mode')
-                          : Text('Dark Mode'),
-                    ],
-                  ),
-                  value: 0,
-                ),
-                PopupMenuItem(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
@@ -162,7 +144,7 @@ class _AppBarCustomState extends State<AppBarCustom> {
                       Text('Contact Developer')
                     ],
                   ),
-                  value: 3,
+                  value: 2,
                 ),
               ];
             },

@@ -17,7 +17,7 @@ class _CompletedState extends State<Completed> {
   var selected = false;
   User user = FirebaseAuth.instance.currentUser;
   Widget _buildList(QuerySnapshot snapshot) {
-    return CompletedTaskSlidableWidget(snapshot);
+    return CompletedTaskSlidableWidget(snapshot, detailedView);
   }
 
   var detailedView = false;
@@ -56,6 +56,29 @@ class _CompletedState extends State<Completed> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                children: [
+                  const Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Completed Tasks'),
+                  ),
+                  if (FirebaseFirestore.instance.collection('tasks') != null)
+                    GestureDetector(
+                      onTap: () {
+                        detailedView = !detailedView;
+                        setState(() {
+                          detailedView;
+                        });
+                      },
+                      child: Text(
+                        detailedView
+                            ? 'show less details'
+                            : 'show more details',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                    ),
+                ],
+              ),
               StreamBuilder<QuerySnapshot>(
                 builder: (context, snapshot) {
                   if (!snapshot.hasData)
@@ -69,6 +92,7 @@ class _CompletedState extends State<Completed> {
                 },
                 stream: FirebaseFirestore.instance
                     .collection('tasks')
+                    .where('id', isEqualTo: user.email)
                     .where('completed', isEqualTo: true)
                     .orderBy('DOC', descending: true)
                     .snapshots(),

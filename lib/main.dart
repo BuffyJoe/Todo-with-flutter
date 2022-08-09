@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/screens/expired.dart';
 
@@ -24,21 +25,55 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
+    Future<bool> onWillPop() {
+      showDialog(
+          context: context,
+          builder: (builder) {
+            return AlertDialog(
+              content: Text('Exit App?'),
+              actions: [
+                FlatButton(
+                  child: Text('No'),
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                    return Future.value(false);
+                  },
+                ),
+                FlatButton(
+                    child: Text('Yes'),
+                    color: Colors.red,
+                    onPressed: () {
+                      SystemNavigator.pop();
+                      return Future.value(true);
+                    }),
+              ],
+            );
+          });
+    }
+
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        // themeMode: ThemeMode.dark,
+        theme: ThemeData(
+          primaryColor: Colors.blue,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          primaryColor: Colors.grey[900],
+          brightness: Brightness.dark,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreenWidget(),
+        routes: {
+          '/home': (context) => Home(),
+          '/completed': (context) => Completed(),
+          '/login': (context) => Login(),
+          '/expired': (context) => Expired(),
+        },
       ),
-      debugShowCheckedModeBanner: false,
-      home: SplashScreenWidget(),
-      routes: {
-        '/home': (context) => Home(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/completed': (context) => Completed(),
-        '/login': (context) => Login(),
-        '/expired': (context) => Expired(),
-      },
     );
   }
 }

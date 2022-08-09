@@ -7,8 +7,10 @@ import 'package:intl/intl.dart';
 
 class CompletedTaskSlidableWidget extends StatelessWidget {
   final QuerySnapshot snapshot;
-  CompletedTaskSlidableWidget(this.snapshot);
+  final bool detailedView;
+  CompletedTaskSlidableWidget(this.snapshot, this.detailedView);
   User user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     final Brightness theme = Theme.of(context).brightness;
@@ -24,11 +26,16 @@ class CompletedTaskSlidableWidget extends StatelessWidget {
           // final time = DateFormat('MM/dd/yy').parse(doc['time']);
           // print(time);
           return Container(
-            margin: EdgeInsets.only(left: 5, right: 5),
-            height: 70,
+            clipBehavior: Clip.hardEdge,
+            margin: EdgeInsets.only(left: 5, right: 5, bottom: 3),
+            height: detailedView ? 170 : 70,
             decoration: BoxDecoration(
-                color: Colors.green[400],
-                borderRadius: BorderRadius.circular(10)),
+              color: Colors.green[400],
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
             child: Slidable(
               actionExtentRatio: 0.2,
               key: ValueKey(doc.id),
@@ -60,42 +67,108 @@ class CompletedTaskSlidableWidget extends StatelessWidget {
                     ],
                   ),
                 ),
+                subtitle: detailedView
+                    ? Container(
+                        height: 90,
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.only(bottom: 0, left: 5, right: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Description: ',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              '${doc['description']}',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
               ),
               actionPane: SlidableDrawerActionPane(),
               actions: [
                 GestureDetector(
                   onTap: () {
-                    FirebaseFirestore.instance
-                        .collection('tasks')
-                        .doc(doc.id)
-                        .delete();
-                    final snackBar = SnackBar(
-                      content: const Text('Entry has been deleted'),
-                      action: SnackBarAction(
-                        label: 'undo',
-                        onPressed: () {
-                          FirebaseFirestore.instance.collection('tasks').add({
-                            'name': doc['name'],
-                            'description': doc['description'],
-                            'completed': true,
-                            'DOC': doc['DOC'],
-                            'created': doc['created'],
-                            'time': doc['time'],
-                            'expired': doc['expired'],
-                            'id': user.email,
-                          });
-                        },
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    showDialog(
+                        context: context,
+                        builder: (builder) {
+                          return AlertDialog(
+                            content: Text('Delete \" ${doc['name']} \"?'),
+                            actions: [
+                              FlatButton(
+                                child: const Text('No'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              FlatButton(
+                                child: const Text('Yes'),
+                                color: Colors.red,
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('tasks')
+                                      .doc(doc.id)
+                                      .delete();
+                                  Navigator.pop(context);
+                                  final snackBar = SnackBar(
+                                    content:
+                                        const Text('Entry has been deleted'),
+                                    action: SnackBarAction(
+                                      label: 'undo',
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('tasks')
+                                            .add({
+                                          'name': doc['name'],
+                                          'id': user.email,
+                                          'description': doc['description'],
+                                          'completed': false,
+                                          'DOC': doc['DOC'],
+                                          'created': doc['created'],
+                                          'time': doc['time'],
+                                          'expired': doc['expired']
+                                        });
+                                      },
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                },
+                              ),
+                            ],
+                          );
+                        });
                   },
                   child: Container(
-                      height: 70,
+                    height: detailedView ? 170 : 70,
+                    decoration: BoxDecoration(
                       color: Colors.red,
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      )),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        // bottomRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: detailedView ? 50 : 30,
+                    ),
+                  ),
                 ),
               ],
             ),

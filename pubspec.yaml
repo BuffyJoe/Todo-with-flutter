@@ -43,7 +43,12 @@ dependencies:
   flutter_web_browser:
   firebase_auth: 
   provider:
+  flutter_local_notifications: ^6.1.0
+  rxdart: ^0.27.1
   google_fonts:
+  smooth_page_indicator: ^1.0.0+2
+  get: ^4.6.1
+  timezone: ^0.7.0
 dependency_overrides:
   firebase_messaging_platform_interface: 3.1.6
   firebase_crashlytics_platform_interface: 3.1.13

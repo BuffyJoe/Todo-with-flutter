@@ -59,6 +59,7 @@ class _EditState extends State<Edit> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.name),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Container(

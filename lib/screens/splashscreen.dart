@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:todo_app/screens/onboarding/onboarding_screen.dart';
 
 import 'package:todo_app/wrapper.dart';
 
@@ -14,18 +15,10 @@ class _SplashScreenWidgetState extends State<SplashScreenWidget> {
   @override
   void initState() {
     Future.delayed(Duration(seconds: 5), () {
-      // if (user == null) {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (builder) {
         return Wrapper();
       }), (Route<dynamic> route) => false);
-      // }
-      // else {
-      //   Navigator.pushAndRemoveUntil(context,
-      //       MaterialPageRoute(builder: (builder) {
-      //     return Home();
-      //   }), (Route<dynamic> route) => false);
-      // }
     });
     super.initState();
   }

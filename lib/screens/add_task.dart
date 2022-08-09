@@ -4,12 +4,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:todo_app/providers/notificationAPI.dart';
+
 class AddTask extends StatefulWidget {
   @override
   State<AddTask> createState() => _AddTaskState();
 }
 
 class _AddTaskState extends State<AddTask> {
+  @override
+  void initState() {
+    super.initState();
+    NotificationApi.init();
+    tz.initializeTimeZones();
+  }
+
   var textcontrol = '';
   var descriptionControl = '';
   var initialDate = DateTime.now();
@@ -46,6 +56,7 @@ class _AddTaskState extends State<AddTask> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('New Task'),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -125,6 +136,12 @@ class _AddTaskState extends State<AddTask> {
                             'time': newTime.format(context).toString(),
                             'expired': false,
                           },
+                        );
+
+                        NotificationApi.showScheduledNotification(
+                          title: textcontrol,
+                          body: descriptionControl,
+                          scheduledDate: DateTime.now().add(Duration(seconds: 5))
                         );
 
                         // setState(() {

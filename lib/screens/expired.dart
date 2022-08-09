@@ -29,14 +29,18 @@ class _ExpiredState extends State<Expired> {
         itemBuilder: (context, index) {
           final doc = snapshot.docs[index];
           return Container(
-              margin: EdgeInsets.only(left: 5, right: 5),
+              clipBehavior: Clip.hardEdge,
+              margin: EdgeInsets.only(left: 5, right: 5, bottom: 3),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
                 color: Colors.red[300],
               ),
               padding: EdgeInsets.zero,
               height: detailedView ? 170 : 70,
-              child: ExpiredTaskSlidableWidget(doc));
+              child: ExpiredTaskSlidableWidget(doc, detailedView));
         },
       ),
     );
@@ -78,6 +82,29 @@ class _ExpiredState extends State<Expired> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                children: [
+                  const Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Expired Tasks'),
+                  ),
+                  if (FirebaseFirestore.instance.collection('tasks') != null)
+                    GestureDetector(
+                      onTap: () {
+                        detailedView = !detailedView;
+                        setState(() {
+                          detailedView;
+                        });
+                      },
+                      child: Text(
+                        detailedView
+                            ? 'show less details'
+                            : 'show more details',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                ],
+              ),
               StreamBuilder<QuerySnapshot>(
                 builder: (context, snapshot) {
                   if (!snapshot.hasData)
@@ -91,6 +118,7 @@ class _ExpiredState extends State<Expired> {
                 },
                 stream: FirebaseFirestore.instance
                     .collection('tasks')
+                    .where('id', isEqualTo: user.email)
                     .where('expired', isEqualTo: true)
                     .orderBy('DOC', descending: true)
                     .snapshots(),

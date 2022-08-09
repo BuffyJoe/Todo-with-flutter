@@ -23,139 +23,147 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     Future<User> CreateAccount(String email, String password) async {}
 
-    return Scaffold(
-      // backgroundColor: Colors.brown[50],
-      bottomNavigationBar: Container(
-        height: 50,
-        child: Column(
-          children: [
-            Text(signUp
-                ? 'Already Have an Account?'
-                : 'Don\'t have an account?'),
-            GestureDetector(
-              child: Text(
-                signUp ? 'Log-in instead' : 'Sign-up Instead',
-                style: TextStyle(color: Colors.blue),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        // backgroundColor: Colors.brown[50],
+        bottomNavigationBar: Container(
+          height: 50,
+          child: Column(
+            children: [
+              Text(signUp
+                  ? 'Already Have an Account?'
+                  : 'Don\'t have an account?'),
+              GestureDetector(
+                child: Text(
+                  signUp ? 'Log-in instead' : 'Sign-up Instead',
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onTap: () {
+                  setState(() {
+                    signUp = !signUp;
+                  });
+                },
               ),
-              onTap: () {
-                setState(() {
-                  signUp = !signUp;
-                });
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      body: Container(
-        // color: Colors.brown[50],
-        height: 700,
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'MY TODO',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontFamily: 'Monoton Regular',
-                        fontSize: 50,
-                        color: Colors.blue),
-                  ),
-                  Text(
-                    signUp
-                        ? 'Create an Account to get started'
-                        : 'Sign in to continue',
-                    style:
-                        TextStyle(fontFamily: 'Chicken Hunter', fontSize: 32),
-                  ),
-                ],
+        body: Container(
+          // color: Colors.brown[50],
+          height: 700,
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'MY TO-DO',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w200,
+                          fontFamily: 'Monoton Regular',
+                          fontSize: 50,
+                          color: Colors.blue),
+                    ),
+                    Text(
+                      signUp
+                          ? 'Create an Account to get started'
+                          : 'Sign in to continue',
+                      style:
+                          TextStyle(fontFamily: 'Chicken Hunter', fontSize: 32),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(), label: Text('email')),
-              controller: email,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(), label: Text('password')),
-              obscureText: true,
-              controller: password,
-            ),
-            SizedBox(
-              height: signUp ? 20 : 0,
-            ),
-            signUp
-                ? TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        label: Text('confirm password')),
-                    obscureText: true,
-                    controller: password2,
-                  )
-                : Container(),
-            const SizedBox(
-              height: 10,
-            ),
-            change
-                ? GestureDetector(
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      padding: EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        signUp ? 'Create' : 'Submit',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), label: Text('email')),
+                controller: email,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), label: Text('password')),
+                obscureText: true,
+                controller: password,
+              ),
+              SizedBox(
+                height: signUp ? 20 : 0,
+              ),
+              signUp
+                  ? TextField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          label: Text('confirm password')),
+                      obscureText: true,
+                      controller: password2,
+                    )
+                  : Container(),
+              const SizedBox(
+                height: 10,
+              ),
+              !Provider.of<UserProvider>(context, listen: true).is_loading
+                  ? GestureDetector(
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.center,
+                        child: Text(
+                          signUp ? 'Create' : 'Submit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blue,
                         ),
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue,
-                      ),
-                    ),
-                    onTap: () {
-                      if (email.text.isEmpty || password.text.isEmpty) return;
-                      setState(() {
-                        change = !change;
-                      });
-                      Future.delayed(const Duration(seconds: 3), () {
-                        if (signUp) {
-                          Provider.of<UserProvider>(context, listen: false)
-                              .signUp(
-                                  email: email.text,
-                                  password: password.text,
-                                  password2: password2.text);
-                        } else {
-                          Provider.of<UserProvider>(context, listen: false)
-                              .signIn(
-                            email: email.text,
-                            password: password.text,
-                          );
-                        }
+                      onTap: () {
+                        if (email.text.isEmpty || password.text.isEmpty) return;
                         setState(() {
                           change = !change;
                         });
-                      });
-                    },
-                  )
-                : CircularProgressIndicator(),
-          ],
+                        Future.delayed(const Duration(seconds: 3), () {
+                          if (signUp) {
+                            Provider.of<UserProvider>(context, listen: false)
+                                .signUp(
+                                    email: email.text.replaceAll(' ', ''),
+                                    password: password.text,
+                                    password2: password2.text);
+
+                            setState(() {
+                              change = !change;
+                            });
+                          } else {
+                            Provider.of<UserProvider>(context, listen: false)
+                                .signIn(
+                              email: email.text.replaceAll(' ', ''),
+                              password: password.text,
+                            );
+
+                            setState(() {
+                              change = !change;
+                            });
+                          }
+                        });
+                      },
+                    )
+                  : CircularProgressIndicator(),
+            ],
+          ),
         ),
       ),
     );

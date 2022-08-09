@@ -7,11 +7,11 @@ import 'package:intl/intl.dart';
 
 class ExpiredTaskSlidableWidget extends StatelessWidget {
   final QueryDocumentSnapshot doc;
-  ExpiredTaskSlidableWidget(this.doc);
+  final bool detailedView;
+  ExpiredTaskSlidableWidget(this.doc, this.detailedView);
   DateTime today = DateTime.now();
   int backPressCounter = 1;
   int backPressTotal = 2;
-  var detailedView = false;
 
   User user = FirebaseAuth.instance.currentUser;
 
@@ -60,7 +60,13 @@ class ExpiredTaskSlidableWidget extends StatelessWidget {
                 height: 90,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(bottom: 15, left: 0),
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -90,7 +96,6 @@ class ExpiredTaskSlidableWidget extends StatelessWidget {
                 context: context,
                 builder: (builder) {
                   return AlertDialog(
-                    backgroundColor: Colors.brown[50],
                     content: Text('Delete \" ${doc['name']} \"?'),
                     actions: [
                       FlatButton(
@@ -137,7 +142,13 @@ class ExpiredTaskSlidableWidget extends StatelessWidget {
           },
           child: Container(
             height: detailedView ? 170 : 70,
-            color: Colors.red,
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
             child: Icon(
               Icons.delete,
               color: Colors.white,
