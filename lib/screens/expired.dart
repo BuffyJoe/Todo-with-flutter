@@ -22,6 +22,7 @@ class _ExpiredState extends State<Expired> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('Assets/images/Logo.png'),
+          opacity: 0.3,
         ),
       ),
       child: ListView.builder(

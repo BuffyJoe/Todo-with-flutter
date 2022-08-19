@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:740020800196:android:3ad016d6dd8e97dea01791",
+        "android_client_info": {
+          "package_name": "com.buffyjoe.MyToDo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740020800196-r1rhetral0gf3nuro0i7ru144eta2fcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPBNU5jBG2UW9A1X_gM3Wusfm7Z3XM2r4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740020800196-r1rhetral0gf3nuro0i7ru144eta2fcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:740020800196:android:7d8618d1eb401ae5a01791",
         "android_client_info": {
           "package_name": "com.example.todo_app"

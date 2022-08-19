@@ -139,7 +139,7 @@ class _LoginState extends State<Login> {
                         Future.delayed(const Duration(seconds: 3), () {
                           if (signUp) {
                             Provider.of<UserProvider>(context, listen: false)
-                                .signUp(
+                                .signUp(context,
                                     email: email.text.replaceAll(' ', ''),
                                     password: password.text,
                                     password2: password2.text);
@@ -150,6 +150,7 @@ class _LoginState extends State<Login> {
                           } else {
                             Provider.of<UserProvider>(context, listen: false)
                                 .signIn(
+                              context,
                               email: email.text.replaceAll(' ', ''),
                               password: password.text,
                             );

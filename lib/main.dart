@@ -10,6 +10,7 @@ import 'package:todo_app/providers/user_provider.dart';
 import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/screens/home.dart';
 import 'package:todo_app/screens/splashscreen.dart';
+import 'package:todo_app/wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,8 +67,9 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         debugShowCheckedModeBanner: false,
-        home: SplashScreenWidget(),
+        initialRoute: '/',
         routes: {
+          '/': (context) => SplashScreenWidget(),
           '/home': (context) => Home(),
           '/completed': (context) => Completed(),
           '/login': (context) => Login(),

@@ -1,19 +1,14 @@
 import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:todo_app/providers/notificationAPI.dart';
 
 import 'package:todo_app/screens/add_task.dart';
-import 'package:todo_app/screens/completed.dart';
 import 'package:todo_app/shared/navbar.dart';
 import 'package:todo_app/shared/appbar.dart';
 import 'package:todo_app/widgets/activeTaskSlidableWidget.dart';
-
-import 'package:timezone/data/latest.dart' as tz;
 
 class Home extends StatefulWidget {
   @override
@@ -21,13 +16,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    super.initState();
-    NotificationApi.init();
-    tz.initializeTimeZones();
-  }
-
   // create task function
   User user = FirebaseAuth.instance.currentUser;
 
@@ -81,18 +69,7 @@ class _HomeState extends State<Home> {
             FirebaseFirestore.instance.collection('tasks').doc(doc.id).update({
               'expired': true,
             });
-          } else {}
-          // if (dateTime.year == today.year &&
-          //     dateTime.month == today.month &&
-          //     dateTime.day == today.day &&
-          //     dateTime.hour == today.hour &&
-          //     dateTime.minute - today.minute < 30) {
-          //   print('okay');
-          //   NotificationApi.showNotification(
-          //       title: doc['name'],
-          //       body: doc['description'],
-          //       id: DateTime.now().microsecond);
-          // } else {}
+          }
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Container(
@@ -141,34 +118,9 @@ class _HomeState extends State<Home> {
         onPressed: () {
           print(DateTime(DateTime.now().year, DateTime.now().month));
 
-          // NotificationApi.showScheduledNotification(
-          //   title: 'new',
-          //   body: 'bith',
-          //   scheduledDate: DateTime.now().add(
-          //     Duration(
-          //       seconds: 5,
-          //     ),
-          //   ),
-          // );
-          //         DateTime.now().day, DateTime.now().hour, 11))
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return AddTask();
           }));
-          // NotificationApi.showNotification(
-          //     title: 'It worked',
-          //     body: 'took me a while but it worked',
-          //     payload: 'on to scheduling it');
-
-          // NotificationApi.showScheduledNotification(
-          //     title: 'scheduling works too',
-          //     body: 'it really does work',
-          //     scheduledDate: DateTime.now().add(Duration(seconds: 10)));
-
-          // NotificationApi.showScheduledNotification(
-          //     title: 'scheduling works too reall',
-          //     body: 'it really does work also',
-          //     scheduledDate: DateTime(DateTime.now().year, DateTime.now().month,
-          //         DateTime.now().day, DateTime.now().hour, 11));
         },
         elevation: 5,
       ),
@@ -177,7 +129,8 @@ class _HomeState extends State<Home> {
         height: deviceHeight,
         decoration: BoxDecoration(
           // color: Colors.brown[50],
-          image: DecorationImage(image: AssetImage('Assets/images/Logo.png')),
+          image: DecorationImage(
+              image: AssetImage('Assets/images/Logo.png'), opacity: 0.3),
         ),
         padding: EdgeInsets.symmetric(
           // horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -209,13 +162,6 @@ class _HomeState extends State<Home> {
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),
-                  // OutlinedButton(
-                  //     onPressed: () {
-                  //       NotificationApi.showNotification(
-                  //           title: 'Hey', body: 'Legaos', payload: 'payload');
-                  //     },
-                  //     child: Text('show Notification'),
-                  // ),
                 ],
               ),
               StreamBuilder<QuerySnapshot>(

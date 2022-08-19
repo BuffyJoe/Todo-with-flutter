@@ -17,20 +17,21 @@ class UserProvider with ChangeNotifier {
 
   bool is_loading = false;
 
-  void signUp(
+  void signUp(BuildContext context,
       {@required String email,
       @required String password,
       @required String password2}) async {
     is_loading = true;
     if (password != password2) {
       Fluttertoast.showToast(
-        msg: 'Password does not match',
-        gravity: ToastGravity.TOP,
+        msg: Errors.show('Password does not match'),
+        gravity: ToastGravity.SNACKBAR,
         textColor: Colors.white,
         toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Color.fromRGBO(255, 0, 0, 0.6),
+        backgroundColor: Color.fromRGBO(189, 189, 189, 1),
         fontSize: 15,
       );
+      is_loading = false;
       return;
     }
     try {
@@ -43,10 +44,10 @@ class UserProvider with ChangeNotifier {
       print(e.code);
       Fluttertoast.showToast(
         msg: Errors.show(e.code),
-        gravity: ToastGravity.TOP,
+        gravity: ToastGravity.SNACKBAR,
         textColor: Colors.white,
         toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Color.fromRGBO(255, 0, 0, 0.6),
+        backgroundColor: Color.fromRGBO(189, 189, 189, 1),
         fontSize: 15,
       );
       is_loading = false;
@@ -60,7 +61,8 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void signIn({@required String email, @required String password}) async {
+  void signIn(BuildContext context,
+      {@required String email, @required String password}) async {
     print('true 0');
     is_loading = true;
     Future.delayed(Duration(seconds: 2));
@@ -72,12 +74,13 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     } on FirebaseAuthException catch (e) {
       print(e.code);
+
       Fluttertoast.showToast(
         msg: Errors.show(e.code),
-        gravity: ToastGravity.TOP,
+        gravity: ToastGravity.SNACKBAR,
         textColor: Colors.white,
         toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Color.fromRGBO(255, 0, 0, 0.6),
+        backgroundColor: Color.fromRGBO(189, 189, 189, 1),
         fontSize: 15,
       );
       is_loading = false;

@@ -16,8 +16,12 @@ class CompletedTaskSlidableWidget extends StatelessWidget {
     final Brightness theme = Theme.of(context).brightness;
     return Container(
       decoration: BoxDecoration(
-          // color: Colors.brown[50],
-          image: DecorationImage(image: AssetImage('Assets/images/Logo.png'))),
+        // color: Colors.brown[50],
+        image: DecorationImage(
+          image: AssetImage('Assets/images/Logo.png'),
+          opacity: 0.3,
+        ),
+      ),
       height: MediaQuery.of(context).size.height * 0.7,
       child: ListView.builder(
         itemCount: snapshot.docs.length,
